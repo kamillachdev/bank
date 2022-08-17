@@ -9,6 +9,14 @@ user::user(std::string un, std::string pw, int p)
 	funds = 0;
 }
 
+bool user::loginvalidation(std::string unCheck, std::string pwCheck)
+{
+	if (username == unCheck && password == pwCheck)
+		return true;
+	else
+		return false;
+}
+
 void user::showDetails()
 {
 	using std::cout;
