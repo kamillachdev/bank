@@ -1,7 +1,9 @@
 ﻿#include <iostream>
+#include <regex>
+#include <string>
 #include "user.h"
 
-void mainMenu();
+void mainMenu(user user);
 void loginMenu();
 void Register();
 void Login(user user);
@@ -9,57 +11,112 @@ void Login(user user);
 bool run = true;
 
 int main()
-{      
+{ 
+    user emptyUser("", "", 0);
     while (run)
     {
-        mainMenu();
+        mainMenu(emptyUser);
     }
 }
 
-void mainMenu()
+void mainMenu(user user)
 {
     using std::cout;
-    char choice = '\0';
+    char choice = '1';
     cout << "RLG Bank\n";
     cout << "If you are new , register - 1\n";
     cout << "Already have an account? login - 2\n";
     cout << "Close the app - 3\n";
-    while (choice != '1' || choice != '2' || choice != '3');
-        std::cin >> choice;
-    if (choice == 1)
-        Register();
-    if (choice == 2)
-        Login(user1);
-    if (choice == 3)
+    bool looprun = 1;
+    while (looprun)
     {
-        run = false;
-        return;
+        std::cin >> choice;
+        switch (choice)
+        {
+        case '1':
+            Register();
+            looprun = 0;
+            break;
+        case '2':
+            Login(user);
+            looprun = 0;
+            break;
+        case '3':
+            run = false;
+            looprun = 0;
+            return;
+        default:
+            cout << "Wrong number, enter again\n";
+        }
     }
 }
 
 void Register()
 {
-    std::string username = "";
-    std::string password = "";
+    using namespace std;
+    string username = "";
+    string password = "";
     int pin = 0;
-    std::cout << "Enter your name: ";
-    std::cin >> username;
-    std::cout << "Enter your password";
-    std::cin >> password;
-    std::cout << "Enter your PIN: ";
+    regex unRegex ("^[a-zA-Z0-9\_\.]{3,}$");
+    regex pwRegex ("^[a-zA-Z0-9\_\.\-]{8,}$");
+    regex pinRegex ("^[0-9]{4}");
+    bool validation = 1;
+    string temp = "";
+
+    cout << "~Registration process~\n";
+    while (validation)
+    {
+        cout << "Enter your name: ";
+        cin >> username;
+        if (!regex_match(username, unRegex))
+        {
+            cout << "Username must be at least 3 characters long(letters, numbers, '_', '.')!\n";
+        }
+        else
+            validation = 0;
+    }
+
+    while (!validation)
+    {
+        std::cout << "Enter your password: ";
+        std::cin >> password;
+        if (!regex_match(password, pwRegex))
+        {
+            cout << "Password must be minimum eight characters, at least one letter, one number and one special character!\n";
+        }
+        else
+            validation = 1;
+    }
+
+    while (validation)
+    {
+        std::cout << "Enter your PIN: ";
+        std::cin >> pin;
+        temp = to_string(pin);
+        if (!regex_match(temp, pinRegex))
+        {
+            cout << "PIN must be 4 characters long(only numbers 0-9)!\n";
+        }
+    else
+        validation = 0;
+    }
+
     user user1(username, password, pin);
     std::cout << "Account created successfully! Now you can login.\n";
-    mainMenu();
+    mainMenu(user1);
 }
 
 void Login(user user)
 {
     std::string username = "";
     std::string password = "";
+
+    std::cout << "~Login process~\n";
     std::cout << "Enter your name: ";
     std::cin >> username;
-    std::cout << "Enter your password";
+    std::cout << "Enter your password: ";
     std::cin >> password;
+
     if (user.loginvalidation(username, password))
     {
         std::cout << "You logged in!" << std::endl;
@@ -68,10 +125,11 @@ void Login(user user)
     else
     {
         std::cout << "Wrong data entered!";
+        mainMenu(user);
     }
 }
 
 void loginMenu()
 {
-    std::cout << "TO DO";
+    std::cout << "IN PROGRESS\n";
 }

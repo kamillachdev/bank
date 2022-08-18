@@ -9,7 +9,7 @@ private:
 	double funds;
 public:
 	user(std::string un, std::string pw, int PIN);
-	bool loginvalidation(std::string unCheck, std::string pwCheck);
+	bool loginvalidation(std::string unCheck, std::string pwCheck); //un - username, pw - password
 	void showDetails();
 	void deposit(double amount);
 	void withdraw(double amount);
