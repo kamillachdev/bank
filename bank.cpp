@@ -4,7 +4,7 @@
 #include "user.h"
 
 void mainMenu(user user);
-void loginMenu();
+void loginMenu(user user);
 void Register();
 void Login(user user);
 
@@ -102,7 +102,7 @@ void Register()
     }
 
     user user1(username, password, pin);
-    std::cout << "Account created successfully! Now you can login.\n";
+    std::cout << "Account created successfully! Now you can login.\n\n";
     mainMenu(user1);
 }
 
@@ -120,16 +120,44 @@ void Login(user user)
     if (user.loginvalidation(username, password))
     {
         std::cout << "You logged in!" << std::endl;
-        loginMenu();
+        loginMenu(user);
     }
     else
     {
-        std::cout << "Wrong data entered!";
+        std::cout << "Wrong data entered!\n";
         mainMenu(user);
     }
 }
 
-void loginMenu()
-{
-    std::cout << "IN PROGRESS\n";
+void loginMenu(user user)
+{   
+    char choice = '1';
+    std::cout << "\n~Choose action~\n";
+    std::cout << "Show account details - 1 \nDeposit funds - 2 \nWithdraw funds - 3 \nChange your password - 4 \nLog out - 5\n";
+    bool looprun = 1;
+    while (looprun)
+    {
+
+        std::cin >> choice;
+        switch (choice)
+        {
+        case '1':
+            user.showDetails();
+            break;
+        case '2':
+            user.deposit();
+            break;
+        case '3':
+            user.withdraw();
+            break;
+        case '4':
+            user.changePassword();
+            break;
+        case '5':
+            mainMenu(user);
+            break;
+        default:
+            std::cout << "Wrong number, enter again\n";
+        }
+    }
 }
