@@ -1,14 +1,19 @@
 ﻿#include <iostream>
 #include <regex>
 #include <string>
+#include <fstream>
 #include "user.h"
 
 void mainMenu(user user);
 void loginMenu(user user);
 void Register();
 void Login(user user);
+std::string passwordEncryption(std::string password);
 
 bool run = true;
+
+std::ofstream dataFile("bankdata.txt");
+
 
 int main()
 { 
@@ -17,6 +22,7 @@ int main()
     {
         mainMenu(emptyUser);
     }
+
 }
 
 void mainMenu(user user)
@@ -103,6 +109,8 @@ void Register()
 
     user user1(username, password, pin);
     std::cout << "Account created successfully! Now you can login.\n\n";
+    string encryptedPassword = passwordEncryption(password);
+    dataFile << username << "\n" << encryptedPassword << "\n" << pin << "\n";
     mainMenu(user1);
 }
 
@@ -160,4 +168,20 @@ void loginMenu(user user)
             std::cout << "Wrong number, enter again\n";
         }
     }
+}
+
+std::string passwordEncryption(std::string password) //divide the password in half, reverse the halves, and stick them together in the reverse order
+{
+    using std::string;
+    string firstHalf, secondHalf, returnPassword;
+    int passwordLength = password.length();
+    for (int i = 0; i < passwordLength / 2 - 1; i++)
+        firstHalf += password[i];
+    for (int i = passwordLength / 2; i < passwordLength; i++)
+        secondHalf += password[i];
+    for (int i = secondHalf.length() - 1; i >= 0; i--)
+        returnPassword += secondHalf[i];
+    for (int i = firstHalf.length() - 1; i >= 0; i--)
+        returnPassword += firstHalf[i];
+    return returnPassword;
 }
