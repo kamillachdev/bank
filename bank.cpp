@@ -108,7 +108,7 @@ void Register()
     }
 
     user user1(username, password, pin);
-    std::cout << "Account created successfully! Now you can login.\n\n";
+    cout << "Account created successfully! Now you can login.\n\n";
     string encryptedPassword = passwordEncryption(password);
     dataFile << username << "\n" << encryptedPassword << "\n" << pin << "\n";
     mainMenu(user1);
@@ -172,10 +172,9 @@ void loginMenu(user user)
 
 std::string passwordEncryption(std::string password) //divide the password in half, reverse the halves, and stick them together in the reverse order
 {
-    using std::string;
-    string firstHalf, secondHalf, returnPassword;
+    std::string firstHalf, secondHalf, returnPassword;
     int passwordLength = password.length();
-    for (int i = 0; i < passwordLength / 2 - 1; i++)
+    for (int i = 0; i < passwordLength / 2; i++)
         firstHalf += password[i];
     for (int i = passwordLength / 2; i < passwordLength; i++)
         secondHalf += password[i];

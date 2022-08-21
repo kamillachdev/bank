@@ -28,23 +28,39 @@ void user::showDetails()
 void user::deposit()
 {
 	double amount = 0;
+	int pinCheck = 0;
 	std::cout << "Enter amount of money you want to deposit: ";
 	std::cin >> amount;
-	funds += amount;
-	std::cout << "Deposited successfully!\n";
+	std::cout << "Enter your PIN: ";
+	std::cin >> pinCheck;
+	if (pinCheck == PIN)
+	{
+		funds += amount;
+		std::cout << "Deposited successfully!\n";
+	}
+	else
+		std::cout << "Wrong PIN, action failed";
 }
 
 void user::withdraw()
 {
 	double amount = 0;
+	int pinCheck = 0;
 	std::cout << "Enter amount of money you want to withdraw: ";
 	std::cin >> amount;
 	if (funds - amount < 0)
 		std::cout << "Action failed: You don't have enough funds to withdraw!\n";
 	else
 	{
+		std::cout << "Enter your PIN: ";
+		std::cin >> pinCheck;
+		if (pinCheck == PIN)
+		{
 		funds -= amount;
 		std::cout << "Withdrawed successfully!\n";
+		}
+		else
+			std::cout << "Wrong PIN, action failed";
 	}
 }
 
@@ -61,7 +77,7 @@ void user::changePassword()
 			bool validation = 1;
 			while (validation)
 			{
-				std::cout << "Enter your password: ";
+				std::cout << "Enter your new password: ";
 				std::cin >> newPassword;
 				if (!regex_match(newPassword, pwRegex))
 				{
