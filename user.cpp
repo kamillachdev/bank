@@ -1,6 +1,9 @@
 #include "user.h"
 #include <iostream>
+#include <fstream>
 #include <regex>
+
+std::ofstream dataFile("bankdata.txt");
 
 user::user(std::string un, std::string pw, int p)
 {
@@ -96,4 +99,20 @@ void user::changePassword()
 			std::cout << "Wrong password!";
 		}
 	}
+}
+
+std::string user::passwordEncryptionDecryption(std::string password) //divide the password in half, reverse the halves, and stick them together in the reverse order
+{
+	//makes abcde12345 to 54321edcba
+	std::string firstHalf, secondHalf, returnPassword;
+	int passwordLength = password.length();
+	for (int i = 0; i < passwordLength / 2; i++)
+		firstHalf += password[i];
+	for (int i = passwordLength / 2; i < passwordLength; i++)
+		secondHalf += password[i];
+	for (int i = secondHalf.length() - 1; i >= 0; i--)
+		returnPassword += secondHalf[i];
+	for (int i = firstHalf.length() - 1; i >= 0; i--)
+		returnPassword += firstHalf[i];
+	return returnPassword;
 }

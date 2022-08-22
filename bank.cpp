@@ -4,11 +4,11 @@
 #include <fstream>
 #include "user.h"
 
+//function prototypes
 void mainMenu(user user);
 void loginMenu(user user);
 void Register();
 void Login(user user);
-std::string passwordEncryption(std::string password);
 
 bool run = true;
 
@@ -22,7 +22,8 @@ int main()
     {
         mainMenu(emptyUser);
     }
-
+    dataFile.close();
+    return 0;
 }
 
 void mainMenu(user user)
@@ -53,6 +54,39 @@ void mainMenu(user user)
             return;
         default:
             cout << "Wrong number, enter again\n";
+        }
+    }
+}
+
+void loginMenu(user user)
+{
+    char choice = '1';
+    std::cout << "\n~Choose action~\n";
+    std::cout << "Show account details - 1 \nDeposit funds - 2 \nWithdraw funds - 3 \nChange your password - 4 \nLog out - 5\n";
+    bool looprun = 1;
+    while (looprun)
+    {
+
+        std::cin >> choice;
+        switch (choice)
+        {
+        case '1':
+            user.showDetails();
+            break;
+        case '2':
+            user.deposit();
+            break;
+        case '3':
+            user.withdraw();
+            break;
+        case '4':
+            user.changePassword();
+            break;
+        case '5':
+            mainMenu(user);
+            break;
+        default:
+            std::cout << "Wrong number, enter again\n";
         }
     }
 }
@@ -109,7 +143,8 @@ void Register()
 
     user user1(username, password, pin);
     cout << "Account created successfully! Now you can login.\n\n";
-    string encryptedPassword = passwordEncryption(password);
+    //saving data(username, encrypted password, pin) into the file
+    string encryptedPassword = user1.passwordEncryptionDecryption(password);
     dataFile << username << "\n" << encryptedPassword << "\n" << pin << "\n";
     mainMenu(user1);
 }
@@ -135,52 +170,4 @@ void Login(user user)
         std::cout << "Wrong data entered!\n";
         mainMenu(user);
     }
-}
-
-void loginMenu(user user)
-{   
-    char choice = '1';
-    std::cout << "\n~Choose action~\n";
-    std::cout << "Show account details - 1 \nDeposit funds - 2 \nWithdraw funds - 3 \nChange your password - 4 \nLog out - 5\n";
-    bool looprun = 1;
-    while (looprun)
-    {
-
-        std::cin >> choice;
-        switch (choice)
-        {
-        case '1':
-            user.showDetails();
-            break;
-        case '2':
-            user.deposit();
-            break;
-        case '3':
-            user.withdraw();
-            break;
-        case '4':
-            user.changePassword();
-            break;
-        case '5':
-            mainMenu(user);
-            break;
-        default:
-            std::cout << "Wrong number, enter again\n";
-        }
-    }
-}
-
-std::string passwordEncryption(std::string password) //divide the password in half, reverse the halves, and stick them together in the reverse order
-{
-    std::string firstHalf, secondHalf, returnPassword;
-    int passwordLength = password.length();
-    for (int i = 0; i < passwordLength / 2; i++)
-        firstHalf += password[i];
-    for (int i = passwordLength / 2; i < passwordLength; i++)
-        secondHalf += password[i];
-    for (int i = secondHalf.length() - 1; i >= 0; i--)
-        returnPassword += secondHalf[i];
-    for (int i = firstHalf.length() - 1; i >= 0; i--)
-        returnPassword += firstHalf[i];
-    return returnPassword;
 }

@@ -14,5 +14,6 @@ public:
 	void deposit();
 	void withdraw();
 	void changePassword();
+	std::string passwordEncryptionDecryption(std::string password);
 };
 
