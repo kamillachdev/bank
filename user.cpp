@@ -3,8 +3,6 @@
 #include <fstream>
 #include <regex>
 
-std::ofstream dataFile("bankdata.txt");
-
 user::user(std::string un, std::string pw, int p)
 {
 	username = un;
@@ -13,9 +11,16 @@ user::user(std::string un, std::string pw, int p)
 	funds = 0;
 }
 
-bool user::loginvalidation(std::string unCheck, std::string pwCheck)
+bool user::loginvalidation(std::string un, std::string pw)
 {
-	if (username == unCheck && password == pwCheck)
+	using namespace std;
+
+	string unCheck, pwCheck;
+	ifstream read("data" + un + ".txt");
+	getline(read, unCheck);
+	getline(read, pwCheck);
+
+	if (unCheck == un && pwCheck == passwordEncryptionDecryption(pw))
 		return true;
 	else
 		return false;

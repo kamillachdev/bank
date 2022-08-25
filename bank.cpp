@@ -12,9 +12,6 @@ void Login(user user);
 
 bool run = true;
 
-std::ofstream dataFile("bankdata.txt");
-
-
 int main()
 { 
     user emptyUser("", "", 0);
@@ -22,7 +19,6 @@ int main()
     {
         mainMenu(emptyUser);
     }
-    dataFile.close();
     return 0;
 }
 
@@ -145,7 +141,12 @@ void Register()
     cout << "Account created successfully! Now you can login.\n\n";
     //saving data(username, encrypted password, pin) into the file
     string encryptedPassword = user1.passwordEncryptionDecryption(password);
-    dataFile << username << "\n" << encryptedPassword << "\n" << pin << "\n";
+
+    ofstream file;
+    file.open("data" + username + ".txt");
+    file << username << endl << encryptedPassword << endl << pin;
+    file.close();
+
     mainMenu(user1);
 }
 
