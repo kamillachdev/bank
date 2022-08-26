@@ -90,9 +90,9 @@ void loginMenu(user user)
 void Register()
 {
     using namespace std;
-    string username = "";
-    string password = "";
+    string username = "", password = "";
     int pin = 0;
+    double funds = 0;
     regex unRegex ("^[a-zA-Z0-9\_\.]{3,}$");
     regex pwRegex ("^[a-zA-Z0-9\_\.\-]{8,}$");
     regex pinRegex ("^[0-9]{4}");
@@ -139,12 +139,12 @@ void Register()
 
     user user1(username, password, pin);
     cout << "Account created successfully! Now you can login.\n\n";
-    //saving data(username, encrypted password, pin) into the file
+    //saving data(username, encrypted password, pin, funds) into the file
     string encryptedPassword = user1.passwordEncryptionDecryption(password);
 
     ofstream file;
     file.open("data" + username + ".txt");
-    file << username << endl << encryptedPassword << endl << pin;
+    file << username << endl << encryptedPassword << endl << pin << endl << funds;
     file.close();
 
     mainMenu(user1);

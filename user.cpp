@@ -2,8 +2,15 @@
 #include <iostream>
 #include <fstream>
 #include <regex>
+#include <vector>
 
-user::user(std::string un, std::string pw, int p)
+using namespace std;
+
+string username = "", unCheck, pwCheck, pinCheck, fundsCheck;
+int fileLine = 0;
+vector<string> lines;
+
+user::user(string un, string pw, int p)
 {
 	username = un;
 	password = pw;
@@ -11,14 +18,18 @@ user::user(std::string un, std::string pw, int p)
 	funds = 0;
 }
 
-bool user::loginvalidation(std::string un, std::string pw)
+bool user::loginvalidation(string un, string pw)
 {
-	using namespace std;
-
-	string unCheck, pwCheck;
 	ifstream read("data" + un + ".txt");
 	getline(read, unCheck);
 	getline(read, pwCheck);
+	getline(read, pinCheck);
+	getline(read, fundsCheck);
+	lines.push_back(unCheck);
+	lines.push_back(pwCheck);
+	lines.push_back(pinCheck);
+	lines.push_back(fundsCheck);
+	username = un;
 
 	if (unCheck == un && pwCheck == passwordEncryptionDecryption(pw))
 		return true;
@@ -28,88 +39,117 @@ bool user::loginvalidation(std::string un, std::string pw)
 
 void user::showDetails()
 {
-	using std::cout;
-	cout << "Username: " << username << "\n";
-	cout << "Funds: " << funds << "\n";
+	ifstream read("data" + username + ".txt");
+	getline(read, unCheck);
+	getline(read, pwCheck);
+	getline(read, pinCheck);
+	getline(read, fundsCheck);
+	cout << "Username: " << unCheck << "\n";
+	cout << "Funds: " << fundsCheck << "\n";
 }
 
 void user::deposit()
 {
+	ifstream read("data" + username + ".txt");
+	getline(read, unCheck);
+	getline(read, pwCheck);
+	getline(read, pinCheck);
+	getline(read, fundsCheck);
 	double amount = 0;
-	int pinCheck = 0;
-	std::cout << "Enter amount of money you want to deposit: ";
-	std::cin >> amount;
-	std::cout << "Enter your PIN: ";
-	std::cin >> pinCheck;
-	if (pinCheck == PIN)
+	string pinInput = "";
+	cout << "Enter amount of money you want to deposit: ";
+	cin >> amount;
+	cout << "Enter your PIN: ";
+	cin >> pinInput;
+	if (pinCheck == pinInput)
 	{
 		funds += amount;
-		std::cout << "Deposited successfully!\n";
+		cout << "Deposited successfully!\n";
+
+		//changing funds into data file
+		for (int i = 0; i < lines.size(); i++)
+		{
+			if (i != fileLine)
+				read << lines[i] << endl;
+			else
+				read << (string)funds << endl;
+		}
+
 	}
 	else
-		std::cout << "Wrong PIN, action failed";
+		cout << "Wrong PIN, choose action again: \n";
 }
 
 void user::withdraw()
 {
+	ifstream read("data" + username + ".txt");
+	getline(read, unCheck);
+	getline(read, pwCheck);
+	getline(read, pinCheck);
+	getline(read, fundsCheck);
 	double amount = 0;
-	int pinCheck = 0;
-	std::cout << "Enter amount of money you want to withdraw: ";
-	std::cin >> amount;
+	string pinInput = "";
+	cout << "Enter amount of money you want to withdraw: ";
+	cin >> amount;
 	if (funds - amount < 0)
-		std::cout << "Action failed: You don't have enough funds to withdraw!\n";
+		cout << "Action failed: You don't have enough funds to withdraw!\n";
 	else
 	{
-		std::cout << "Enter your PIN: ";
-		std::cin >> pinCheck;
-		if (pinCheck == PIN)
+		cout << "Enter your PIN: ";
+		cin >> pinInput;
+		if (pinCheck == pinInput)
 		{
 		funds -= amount;
-		std::cout << "Withdrawed successfully!\n";
+		cout << "Withdrawed successfully!\n";
 		}
 		else
-			std::cout << "Wrong PIN, action failed";
+			cout << "Wrong PIN, choose action again: \n";
 	}
 }
 
 void user::changePassword()
 {
-	std::regex pwRegex("^[a-zA-Z0-9\_\.\-]{8,}$");
-	std::string newPassword = "";
-	std::cout << "Enter your old password: ";
-	while (password != newPassword)
+	ifstream read("data" + username + ".txt");
+	getline(read, unCheck);
+	getline(read, pwCheck);
+	getline(read, pinCheck);
+	getline(read, fundsCheck);
+	regex pwRegex("^[a-zA-Z0-9\_\.\-]{8,}$");
+	string newPassword = "";
+	cout << "Enter your old password: ";
+	while (pwCheck != newPassword)
 	{
-		std::cin >> newPassword;
-		if (newPassword == password)
+		cin >> newPassword;
+		if (newPassword == pwCheck)
 		{
 			bool validation = 1;
 			while (validation)
 			{
-				std::cout << "Enter your new password: ";
-				std::cin >> newPassword;
+				cout << "Enter your new password: ";
+				cin >> newPassword;
 				if (!regex_match(newPassword, pwRegex))
 				{
-					std::cout << "Password must be minimum eight characters, at least one letter, one number and one special character!\n";
+					cout << "Password must be minimum eight characters, at least one letter, one number and one special character!\n";
 				}
 				else
 				{
-					password = newPassword;
-					std::cout << "Password changed successfully\n";
+					pwCheck = newPassword;
+					cout << "Password changed successfully\n";
 					validation = 0;
 				}
 			}
 		}
 		else
 		{
-			std::cout << "Wrong password!";
+			std::cout << "Wrong password, write password again: \n";
 		}
 	}
 }
 
-std::string user::passwordEncryptionDecryption(std::string password) //divide the password in half, reverse the halves, and stick them together in the reverse order
+std::string user::passwordEncryptionDecryption(string password) //divide the password in half, reverse the halves, and stick them together in the reverse order
 {
 	//makes abcde12345 to 54321edcba
-	std::string firstHalf, secondHalf, returnPassword;
+	string firstHalf, secondHalf, returnPassword;
 	int passwordLength = password.length();
 	for (int i = 0; i < passwordLength / 2; i++)
 		firstHalf += password[i];
