@@ -7,7 +7,7 @@
 using namespace std;
 
 string username = "", unCheck, pwCheck, pinCheck, fundsCheck;
-int fileLine = 0;
+int fileLine = 3; //funds are third element in data file 
 vector<string> lines;
 
 user::user(string un, string pw, int p)
@@ -29,7 +29,9 @@ bool user::loginvalidation(string un, string pw)
 	lines.push_back(pwCheck);
 	lines.push_back(pinCheck);
 	lines.push_back(fundsCheck);
-	username = un;
+	read.close();
+
+	username = un; // setting username to let other functions use it
 
 	if (unCheck == un && pwCheck == passwordEncryptionDecryption(pw))
 		return true;
@@ -44,6 +46,8 @@ void user::showDetails()
 	getline(read, pwCheck);
 	getline(read, pinCheck);
 	getline(read, fundsCheck);
+	read.close();
+
 	cout << "Username: " << unCheck << "\n";
 	cout << "Funds: " << fundsCheck << "\n";
 }
@@ -55,6 +59,8 @@ void user::deposit()
 	getline(read, pwCheck);
 	getline(read, pinCheck);
 	getline(read, fundsCheck);
+	read.close();
+
 	double amount = 0;
 	string pinInput = "";
 	cout << "Enter amount of money you want to deposit: ";
@@ -67,13 +73,17 @@ void user::deposit()
 		cout << "Deposited successfully!\n";
 
 		//changing funds into data file
+		ofstream write;
+		write.open("data" + username + ".txt");
+		string fundsString = to_string(funds);
 		for (int i = 0; i < lines.size(); i++)
 		{
 			if (i != fileLine)
-				read << lines[i] << endl;
+				write << lines[i] << endl;
 			else
-				read << (string)funds << endl;
+				write << fundsString << endl;
 		}
+		write.close();
 
 	}
 	else
@@ -87,6 +97,8 @@ void user::withdraw()
 	getline(read, pwCheck);
 	getline(read, pinCheck);
 	getline(read, fundsCheck);
+	read.close();
+
 	double amount = 0;
 	string pinInput = "";
 	cout << "Enter amount of money you want to withdraw: ";
@@ -99,8 +111,22 @@ void user::withdraw()
 		cin >> pinInput;
 		if (pinCheck == pinInput)
 		{
-		funds -= amount;
-		cout << "Withdrawed successfully!\n";
+			funds -= amount;
+			cout << "Withdrawed successfully!\n";
+
+			//changing funds into data file
+			ofstream write;
+			write.open("data" + username + ".txt");
+			string fundsString = to_string(funds);
+			for (int i = 0; i < lines.size(); i++)
+			{
+				if (i != fileLine)
+					write << lines[i] << endl;
+				else
+					write << fundsString << endl;
+			}
+			write.close();
+
 		}
 		else
 			cout << "Wrong PIN, choose action again: \n";
@@ -114,13 +140,15 @@ void user::changePassword()
 	getline(read, pwCheck);
 	getline(read, pinCheck);
 	getline(read, fundsCheck);
+	read.close();
+
 	regex pwRegex("^[a-zA-Z0-9\_\.\-]{8,}$");
 	string newPassword = "";
 	cout << "Enter your old password: ";
 	while (pwCheck != newPassword)
 	{
 		cin >> newPassword;
-		if (newPassword == pwCheck)
+		if (newPassword == passwordEncryptionDecryption(pwCheck))
 		{
 			bool validation = 1;
 			while (validation)
@@ -135,6 +163,20 @@ void user::changePassword()
 				{
 					pwCheck = newPassword;
 					cout << "Password changed successfully\n";
+
+					//saving password into data file
+					fileLine = 1;
+					ofstream write;
+					write.open("data" + username + ".txt");
+					for (int i = 0; i < lines.size(); i++)
+					{
+						if (i != fileLine)
+							write << lines[i] << endl;
+						else
+							write << passwordEncryptionDecryption(pwCheck) << endl;
+					}
+					write.close();
+
 					validation = 0;
 				}
 			}

@@ -79,6 +79,7 @@ void loginMenu(user user)
             user.changePassword();
             break;
         case '5':
+            looprun = 0;
             mainMenu(user);
             break;
         default:
