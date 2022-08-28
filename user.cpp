@@ -1,14 +1,15 @@
-#include "user.h"
 #include <iostream>
 #include <fstream>
 #include <regex>
 #include <vector>
+#include <iomanip>
+#include "user.h"
+
 
 using namespace std;
 
-string username = "", unCheck, pwCheck, pinCheck, fundsCheck;
-int fileLine = 3; //funds are third element in data file 
 vector<string> lines;
+string username = "", unCheck, pwCheck, pinCheck, fundsCheck;
 
 user::user(string un, string pw, int p)
 {
@@ -18,9 +19,17 @@ user::user(string un, string pw, int p)
 	funds = 0;
 }
 
+
 bool user::loginvalidation(string un, string pw)
 {
 	ifstream read("data" + un + ".txt");
+
+	if (read.fail())
+	{
+		cout << "There is no user named " << un << "!" << endl;
+		return false;
+	}
+
 	getline(read, unCheck);
 	getline(read, pwCheck);
 	getline(read, pinCheck);
@@ -34,10 +43,17 @@ bool user::loginvalidation(string un, string pw)
 	username = un; // setting username to let other functions use it
 
 	if (unCheck == un && pwCheck == passwordEncryptionDecryption(pw))
+	{
+		cout << "You logged in!" << endl;
 		return true;
+	}
 	else
+	{
+		cout << "Wrong password!" << endl;
 		return false;
+	}
 }
+
 
 void user::showDetails()
 {
@@ -46,11 +62,13 @@ void user::showDetails()
 	getline(read, pwCheck);
 	getline(read, pinCheck);
 	getline(read, fundsCheck);
+	double fundsCheckDouble = std::stod(fundsCheck);
 	read.close();
 
 	cout << "Username: " << unCheck << "\n";
-	cout << "Funds: " << fundsCheck << "\n";
+	cout << "Funds: " << fixed << setprecision(2) << fundsCheckDouble << " USD" << "\nSelect action again: ";
 }
+
 
 void user::deposit()
 {
@@ -59,26 +77,33 @@ void user::deposit()
 	getline(read, pwCheck);
 	getline(read, pinCheck);
 	getline(read, fundsCheck);
+	double fundsCheckDouble = std::stod(fundsCheck);
 	read.close();
 
 	double amount = 0;
 	string pinInput = "";
-	cout << "Enter amount of money you want to deposit: ";
-	cin >> amount;
+
+	while (std::cout << "Enter amount of money you want to deposit: " && !(std::cin >> amount))
+	{
+		std::cin.clear();
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+		std::cout << "Invalid input! Please re-enter.\n";
+	}
+
 	cout << "Enter your PIN: ";
 	cin >> pinInput;
 	if (pinCheck == pinInput)
 	{
-		funds += amount;
+		fundsCheckDouble += amount;
 		cout << "Deposited successfully!\n";
 
 		//changing funds into data file
 		ofstream write;
 		write.open("data" + username + ".txt");
-		string fundsString = to_string(funds);
+		string fundsString = to_string(fundsCheckDouble);
 		for (int i = 0; i < lines.size(); i++)
 		{
-			if (i != fileLine)
+			if (i != 3) //3 is funds line in data file
 				write << lines[i] << endl;
 			else
 				write << fundsString << endl;
@@ -90,6 +115,7 @@ void user::deposit()
 		cout << "Wrong PIN, choose action again: \n";
 }
 
+
 void user::withdraw()
 {
 	ifstream read("data" + username + ".txt");
@@ -97,30 +123,37 @@ void user::withdraw()
 	getline(read, pwCheck);
 	getline(read, pinCheck);
 	getline(read, fundsCheck);
+	double fundsCheckDouble = std::stod(fundsCheck);
 	read.close();
 
 	double amount = 0;
 	string pinInput = "";
-	cout << "Enter amount of money you want to withdraw: ";
-	cin >> amount;
-	if (funds - amount < 0)
-		cout << "Action failed: You don't have enough funds to withdraw!\n";
+
+	while (std::cout << "Enter amount of money you want to withdraw: " && !(std::cin >> amount))
+	{
+		std::cin.clear();
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+		std::cout << "Invalid input! Please re-enter.\n";
+	}
+
+	if (fundsCheckDouble - amount < 0)
+		cout << "Action failed: You don't have enough funds to withdraw! \nSelect action again: ";
 	else
 	{
 		cout << "Enter your PIN: ";
 		cin >> pinInput;
 		if (pinCheck == pinInput)
 		{
-			funds -= amount;
-			cout << "Withdrawed successfully!\n";
+			fundsCheckDouble += amount;
+			cout << "Withdrawed successfully!\nSelect action again: ";
 
 			//changing funds into data file
 			ofstream write;
 			write.open("data" + username + ".txt");
-			string fundsString = to_string(funds);
+			string fundsString = to_string(fundsCheckDouble);
 			for (int i = 0; i < lines.size(); i++)
 			{
-				if (i != fileLine)
+				if (i != 3) //3 is funds line in data file
 					write << lines[i] << endl;
 				else
 					write << fundsString << endl;
@@ -129,9 +162,10 @@ void user::withdraw()
 
 		}
 		else
-			cout << "Wrong PIN, choose action again: \n";
+			cout << "Wrong PIN, select action again: \n";
 	}
 }
+
 
 void user::changePassword()
 {
@@ -162,15 +196,14 @@ void user::changePassword()
 				else
 				{
 					pwCheck = newPassword;
-					cout << "Password changed successfully\n";
+					cout << "Password changed successfully! \nSelect action again: ";
 
 					//saving password into data file
-					fileLine = 1;
 					ofstream write;
 					write.open("data" + username + ".txt");
 					for (int i = 0; i < lines.size(); i++)
 					{
-						if (i != fileLine)
+						if (i != 1)
 							write << lines[i] << endl;
 						else
 							write << passwordEncryptionDecryption(pwCheck) << endl;
@@ -187,6 +220,7 @@ void user::changePassword()
 		}
 	}
 }
+
 
 std::string user::passwordEncryptionDecryption(string password) //divide the password in half, reverse the halves, and stick them together in the reverse order
 {

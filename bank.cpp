@@ -22,14 +22,14 @@ int main()
     return 0;
 }
 
+
 void mainMenu(user user)
 {
     using std::cout;
+
     char choice = '1';
-    cout << "RLG Bank\n";
-    cout << "If you are new , register - 1\n";
-    cout << "Already have an account? login - 2\n";
-    cout << "Close the app - 3\n";
+    cout << "RLG Bank \nIf you are new , register - 1 \nAlready have an account? login - 2 \nClose the app - 3 \n";
+
     bool looprun = 1;
     while (looprun)
     {
@@ -54,15 +54,15 @@ void mainMenu(user user)
     }
 }
 
+
 void loginMenu(user user)
 {
     char choice = '1';
-    std::cout << "\n~Choose action~\n";
-    std::cout << "Show account details - 1 \nDeposit funds - 2 \nWithdraw funds - 3 \nChange your password - 4 \nLog out - 5\n";
+    std::cout << "\n~Choose action~ \nShow account details - 1 \nDeposit funds - 2 \nWithdraw funds - 3 \nChange your password - 4 \nLog out - 5\n";
+    
     bool looprun = 1;
     while (looprun)
     {
-
         std::cin >> choice;
         switch (choice)
         {
@@ -88,17 +88,19 @@ void loginMenu(user user)
     }
 }
 
+
 void Register()
 {
     using namespace std;
+
     string username = "", password = "";
     int pin = 0;
     double funds = 0;
     regex unRegex ("^[a-zA-Z0-9\_\.]{3,}$");
     regex pwRegex ("^[a-zA-Z0-9\_\.\-]{8,}$");
     regex pinRegex ("^[0-9]{4}");
-    bool validation = 1;
     string temp = "";
+    bool validation = 1;
 
     cout << "~Registration process~\n";
     while (validation)
@@ -110,7 +112,7 @@ void Register()
             cout << "Username must be at least 3 characters long(letters, numbers, '_', '.')!\n";
         }
         else
-            validation = 0;
+            validation = 0; //closing the loop, going to the next phase
     }
 
     while (!validation)
@@ -140,11 +142,11 @@ void Register()
 
     user user1(username, password, pin);
     cout << "Account created successfully! Now you can login.\n\n";
-    //saving data(username, encrypted password, pin, funds) into the file
-    string encryptedPassword = user1.passwordEncryptionDecryption(password);
 
+    //saving data(username, encrypted password, pin, funds) into the file
     ofstream file;
     file.open("data" + username + ".txt");
+    string encryptedPassword = user1.passwordEncryptionDecryption(password);
     file << username << endl << encryptedPassword << endl << pin << endl << funds;
     file.close();
 
@@ -164,12 +166,10 @@ void Login(user user)
 
     if (user.loginvalidation(username, password))
     {
-        std::cout << "You logged in!" << std::endl;
         loginMenu(user);
     }
     else
     {
-        std::cout << "Wrong data entered!\n";
         mainMenu(user);
     }
 }

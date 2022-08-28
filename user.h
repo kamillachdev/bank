@@ -16,4 +16,3 @@ public:
 	void changePassword();
 	std::string passwordEncryptionDecryption(std::string password);
 };
-
