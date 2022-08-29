@@ -58,7 +58,7 @@ void mainMenu(user user)
 void loginMenu(user user)
 {
     char choice = '1';
-    std::cout << "\n~Choose action~ \nShow account details - 1 \nDeposit funds - 2 \nWithdraw funds - 3 \nChange your password - 4 \nLog out - 5\n";
+    std::cout << "\n~Choose action~ \nShow account details - 1 \nDeposit funds - 2 \nWithdraw funds - 3 \nTransfer funds - 4 \nChange your password - 5 \nLog out - 6\n";
     
     bool looprun = 1;
     while (looprun)
@@ -76,9 +76,12 @@ void loginMenu(user user)
             user.withdraw();
             break;
         case '4':
-            user.changePassword();
+            user.transfer();
             break;
         case '5':
+            user.changePassword();
+            break;
+        case '6':
             looprun = 0;
             mainMenu(user);
             break;

@@ -13,6 +13,7 @@ public:
 	void showDetails();
 	void deposit();
 	void withdraw();
+	void transfer();
 	void changePassword();
 	std::string passwordEncryptionDecryption(std::string password);
 };

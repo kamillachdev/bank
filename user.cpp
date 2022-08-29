@@ -90,6 +90,12 @@ void user::deposit()
 		std::cout << "Invalid input! Please re-enter.\n";
 	}
 
+	if (amount <= 0)
+	{
+		cout << "You cannot transfer a negative amount! \nSelect action again: ";
+		return;
+	}
+
 	cout << "Enter your PIN: ";
 	cin >> pinInput;
 	if (pinCheck == pinInput)
@@ -136,6 +142,12 @@ void user::withdraw()
 		std::cout << "Invalid input! Please re-enter.\n";
 	}
 
+	if (amount <= 0)
+	{
+		cout << "You cannot transfer a negative amount! \nSelect action again: ";
+		return;
+	}
+
 	if (fundsCheckDouble - amount < 0)
 		cout << "Action failed: You don't have enough funds to withdraw! \nSelect action again: ";
 	else
@@ -164,6 +176,98 @@ void user::withdraw()
 		else
 			cout << "Wrong PIN, select action again: \n";
 	}
+}
+
+
+void user::transfer()
+{
+	ifstream read("data" + username + ".txt");
+	getline(read, unCheck);
+	getline(read, pwCheck);
+	getline(read, pinCheck);
+	getline(read, fundsCheck);
+	double fundsCheckDouble = std::stod(fundsCheck);
+	read.close();
+
+	double amount = 0;
+	string usernameInput = "";
+
+	cout << "Write the username to whom you want to transfer money: ";
+	cin >> usernameInput;
+	ifstream transeraccount("data" + usernameInput + ".txt");
+	if (transeraccount.fail())
+	{
+		cout << "There is no user named " << usernameInput << "!\nSelect action again: ";
+		return;
+	}
+
+	while (std::cout << "Enter amount of money you want to transfer: " && !(std::cin >> amount))
+	{
+		std::cin.clear();
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+		std::cout << "Invalid input! Please re-enter.\n";
+	}
+	
+	if (amount > fundsCheckDouble)
+	{
+		cout << "You don't have that amount of money! \nSelect action again: ";
+		return;
+	}
+
+	if (amount <= 0)
+	{
+		cout << "You cannot transfer a negative amount! \nSelect action again: ";
+		return;
+	}
+
+	double leftFunds = fundsCheckDouble - amount; //for data change later
+
+	string pinInput = "";
+	cout << "Enter your PIN: ";
+	cin >> pinInput;
+	if (pinCheck == pinInput)
+	{
+		getline(transeraccount, unCheck);
+		getline(transeraccount, pwCheck);
+		getline(transeraccount, pinCheck);
+		getline(transeraccount, fundsCheck);
+		double fundsCheckDouble = std::stod(fundsCheck);
+		transeraccount.close();
+		fundsCheckDouble += amount;
+
+		//changing funds into data file
+		
+		//step one adding to receiver
+
+		ofstream transeraccount;
+		transeraccount.open("data" + usernameInput + ".txt");
+		string fundsString = to_string(fundsCheckDouble);
+		for (int i = 0; i < lines.size(); i++)
+		{
+			if (i != 3) //3 is funds line in data file
+				transeraccount << lines[i] << endl;
+			else
+				transeraccount << fundsString << endl;
+		}
+		transeraccount.close();
+		cout << "You've transfered your funds successfully! \nSelect action again: ";
+
+		//step two subtraction from sender
+
+		ofstream write;
+		write.open("data" + username + ".txt");
+		fundsString = to_string(leftFunds);
+		for (int i = 0; i < lines.size(); i++)
+		{
+			if (i != 3) //3 is funds line in data file
+				write << lines[i] << endl;
+			else
+				write << fundsString << endl;
+		}
+		write.close();
+	}
+	else
+		cout << "Wrong PIN, select action again: \n";
 }
 
 
