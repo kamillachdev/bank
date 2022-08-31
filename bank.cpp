@@ -17,6 +17,7 @@ int main()
     user emptyUser("", "", 0);
     while (run)
     {
+        system("COLOR 3F");
         mainMenu(emptyUser);
     }
     return 0;
@@ -28,7 +29,21 @@ void mainMenu(user user)
     using std::cout;
 
     char choice = '1';
-    cout << "RLG Bank \nIf you are new , register - 1 \nAlready have an account? login - 2 \nClose the app - 3 \n";
+
+    cout << char(201);
+    for (int i = 0; i <35; i++)
+        cout << char(205);
+    cout << char(187);
+    cout << std::endl;
+    cout << char(186) << "            RLG Bank               " << char(186) << "\n";
+    cout << char(186) << "If you are new, register - 1       " << char(186) << "\n";
+    cout << char(186) << "Already have an account ? login - 2" << char(186) << "\n";
+    cout << char(186) << "Close the app - 3                  " << char(186) << "\n";
+    cout << char(200);
+    for (int i = 0; i < 35; i++)
+        cout << char(205);
+    cout << char(188);
+    cout << std::endl;
 
     bool looprun = 1;
     while (looprun)
