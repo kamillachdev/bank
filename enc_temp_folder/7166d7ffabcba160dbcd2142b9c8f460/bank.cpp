@@ -103,21 +103,21 @@ void loginMenu(user user)
     for (int i = 1; i < 36; i++) charLinesBottom[i] = char(205);
     charLinesBottom[36] = char(188);
 
-    for (int i = 0; i < 37; i++) cout << charLinesUp[i]; cout << std::endl;
+    for (int i = 0; i < 38; i++) cout << charLinesUp[i]; cout << std::endl;
     cout << char(186) << "         ~Choose action~           " << char(186) << "\n";
-    for (int i = 0; i < 37; i++) cout << charLinesMid[i]; cout << std::endl;
+    for (int i = 0; i < 38; i++) cout << charLinesMid[i]; cout << std::endl;
     cout << char(186) << "Show account details - 1           " << char(186) << "\n";
-    for (int i = 0; i < 37; i++) cout << charLinesMid[i]; cout << std::endl;
+    for (int i = 0; i < 38; i++) cout << charLinesMid[i]; cout << std::endl;
     cout << char(186) << "Deposit funds - 2                  " << char(186) << "\n";
-    for (int i = 0; i < 37; i++) cout << charLinesMid[i]; cout << std::endl;
+    for (int i = 0; i < 38; i++) cout << charLinesMid[i]; cout << std::endl;
     cout << char(186) << "Withdraw funds - 3                 " << char(186) << "\n";
-    for (int i = 0; i < 37; i++) cout << charLinesMid[i]; cout << std::endl;
+    for (int i = 0; i < 38; i++) cout << charLinesMid[i]; cout << std::endl;
     cout << char(186) << "Transfer funds - 4                 " << char(186) << "\n";
-    for (int i = 0; i < 37; i++) cout << charLinesMid[i]; cout << std::endl;
+    for (int i = 0; i < 38; i++) cout << charLinesMid[i]; cout << std::endl;
     cout << char(186) << "Change your password - 5           " << char(186) << "\n";
-    for (int i = 0; i < 37; i++) cout << charLinesMid[i]; cout << std::endl;
+    for (int i = 0; i < 38; i++) cout << charLinesMid[i]; cout << std::endl;
     cout << char(186) << "Log out - 6                        " << char(186) << "\n";
-    for (int i = 0; i < 37; i++) cout << charLinesBottom[i]; cout << std::endl;
+    for (int i = 0; i < 38; i++) cout << charLinesBottom[i]; cout << std::endl;
     
     bool looprun = 1;
     while (looprun)
