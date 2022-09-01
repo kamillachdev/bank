@@ -30,20 +30,30 @@ void mainMenu(user user)
 
     char choice = '1';
 
-    cout << char(201);
-    for (int i = 0; i <35; i++)
-        cout << char(205);
-    cout << char(187);
-    cout << std::endl;
+    //menu visuals
+    char charLinesUp[40], charLinesMid[40], charLinesBottom[40];
+
+    charLinesUp[0] = char(201);
+    for (int i = 1; i < 36; i++) charLinesUp[i] = char(205);
+    charLinesUp[36] = char(187);
+
+    charLinesMid[0] = char(204);
+    for (int i = 1; i < 36; i++) charLinesMid[i] = char(205);
+    charLinesMid[36] = char(185);
+
+    charLinesBottom[0] = char(200);
+    for (int i = 1; i < 36; i++) charLinesBottom[i] = char(205);
+    charLinesBottom[36] = char(188);
+
+    for (int i = 0; i < 38; i++) cout << charLinesUp[i]; cout << std::endl;
     cout << char(186) << "            RLG Bank               " << char(186) << "\n";
+    for (int i = 0; i < 38; i++) cout << charLinesMid[i]; cout << std::endl;
     cout << char(186) << "If you are new, register - 1       " << char(186) << "\n";
+    for (int i = 0; i < 38; i++) cout << charLinesMid[i]; cout << std::endl;
     cout << char(186) << "Already have an account ? login - 2" << char(186) << "\n";
+    for (int i = 0; i < 38; i++) cout << charLinesMid[i]; cout << std::endl;
     cout << char(186) << "Close the app - 3                  " << char(186) << "\n";
-    cout << char(200);
-    for (int i = 0; i < 35; i++)
-        cout << char(205);
-    cout << char(188);
-    cout << std::endl;
+    for (int i = 0; i < 38; i++) cout << charLinesBottom[i]; cout << std::endl;
 
     bool looprun = 1;
     while (looprun)
